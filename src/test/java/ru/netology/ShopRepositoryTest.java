@@ -9,14 +9,14 @@ public class ShopRepositoryTest {
     Product product = new Product(5, "хлеб", 40);
 
     @BeforeEach
-    public void setup() {
+    public void setup() throws AlreadyExistsException {
         shop.add(product);
     }
 
     @Test
     public void testSuccessRemoveExisting() {
         Product[] expected = {};
-        Product[] actual = shop.remove(5);
+        Product[] actual = shop.removeById(5);
 
         Assertions.assertArrayEquals(expected, actual);
     }
@@ -25,7 +25,24 @@ public class ShopRepositoryTest {
     public void testNotFoundExceptionRemove() {
 
         Assertions.assertThrows(NotFoundException.class, () -> {
-            shop.remove(55);
+            shop.removeById(55);
+        });
+    }
+
+    @Test
+    public void testSuccessAdd() throws AlreadyExistsException {
+        Product product1 = new Product(15, "сникерс", 65);
+
+        Product[] expected = {product, product1};
+        Product[] actual = shop.add(product1);
+
+        Assertions.assertArrayEquals(expected, actual);
+    }
+
+    @Test
+    public void testAlreadyAddProduct() {
+        Assertions.assertThrows(AlreadyExistsException.class, () -> {
+            shop.add(product);
         });
     }
 }

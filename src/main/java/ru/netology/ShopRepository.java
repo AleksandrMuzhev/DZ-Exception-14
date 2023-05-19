@@ -25,16 +25,22 @@ public class ShopRepository {
      *
      * @param product — добавляемый товар
      */
-    public void add(Product product) {
+    public Product[] add(Product product) throws AlreadyExistsException {
+        Product prod = findById(product.id);
+        if (product == prod) {
+            throw new AlreadyExistsException("Element with id: " + prod.id + " existing");
+        }
         products = addToArray(products, product);
+        return products;
     }
+
 
     public Product[] findAll() {
         return products;
     }
 
     // Этот способ мы рассматривали в теории в теме про композицию
-    public Product[] remove(int id) {
+    public Product[] removeById(int id) {
         Product prod = findById(id);
         if (prod == null) {
             throw new NotFoundException("Element with id: " + id + " not found");
